@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
+            $table->string('api_source');
+            $table->string('source');
+            $table->string('author')->nullable();
+            $table->string('title');
+            $table->text('description')->nullable();
+            $table->text('content')->nullable();
+            $table->string('url')->unique();
+            $table->string('url_to_image')->nullable();
+            $table->dateTime('published_at');
+            $table->longText('raw_message');
             $table->timestamps();
         });
     }

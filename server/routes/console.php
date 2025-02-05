@@ -10,5 +10,5 @@ Artisan::command('inspire', function () {
 
 
 Schedule::call(function () {
-    $this->command("app:fetch-newsapi-articles");
+    $this->command("app:fetch-newsapi-articles " . now()->subDay()->format('Y-m-d'));
 })->daily();

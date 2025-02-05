@@ -17,5 +17,8 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [AuthController::class, 'user']);
-    Route::get('articles', [ArticleController::class, 'get']);
+    Route::get('articles', [ArticleController::class, 'list']);
+    Route::get('articles/{id}', [ArticleController::class, 'get']);
+    Route::get('authors', [ArticleController::class, 'authors']);
+    Route::get('sources', [ArticleController::class, 'sources']);
 });

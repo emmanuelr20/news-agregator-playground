@@ -112,7 +112,7 @@ export default function NewsList() {
             />
           </CardContent>
         </Card>
-        <Card className="">
+        {/* <Card className="">
           <CardContent className="p-4">
             <div className="text-xs text-slate-500 mb-1">
               Preferred Categories
@@ -125,7 +125,7 @@ export default function NewsList() {
               }}
             />
           </CardContent>
-        </Card>
+        </Card> */}
         <Card className="">
           <CardContent className="p-4">
             <div className="text-xs text-slate-500 mb-1">Preferred Author</div>

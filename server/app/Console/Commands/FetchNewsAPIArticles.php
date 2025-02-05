@@ -12,7 +12,7 @@ class FetchNewsAPIArticles extends Command
      *
      * @var string
      */
-    protected $signature = 'app:fetch-newsapi-articles';
+    protected $signature = 'app:fetch-newsapi-articles {date?}';
 
     /**
      * The console command description.
@@ -39,8 +39,15 @@ class FetchNewsAPIArticles extends Command
      */
     public function handle()
     {
-        $this->info('Fetching articles...');
-        $this->newsAPIService->fetchArticles();
-        $this->info('Articles fetched and stored successfully.');
+        $date = $this->argument('date') ?? null;
+
+        $this->info("Fetching news articles for date: $date");
+
+        try {
+            $this->newsAPIService->fetchArticles($date);
+            $this->info('News articles fetched and stored successfully.');
+        } catch (\Exception $e) {
+            $this->error('Error fetching news articles: ' . $e->getMessage());
+        }
     }
 }
