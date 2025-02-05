@@ -1,3 +1,6 @@
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,10 +12,44 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { API_URL } from "@/lib/config";
+import { toast } from "@/hooks/use-toast";
 export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true);
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const name = formData.get("name");
+    const password = formData.get("password");
+    const confirm_password = formData.get("confirm_password");
+
+    const response = await fetch(`${API_URL}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, name, password, confirm_password }),
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      localStorage.setItem("authData", JSON.stringify(data.data));
+      router.push("/news");
+    } else {
+      toast({
+        title: "Registration Failed",
+        description: data.message,
+      });
+      setLoading(false);
+    }
+  }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -23,15 +60,15 @@ export function SignUpForm({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="full-name">Full Name</Label>
+                <Label htmlFor="name">Full Name</Label>
                 <Input
-                  id="full-name"
-                  type="full-name"
-                  name="full-name"
-                  placeholder="m@example.com"
+                  id="name"
+                  type="name"
+                  name="name"
+                  placeholder="John Doe"
                   required
                 />
               </div>
@@ -41,7 +78,7 @@ export function SignUpForm({
                   id="email"
                   type="email"
                   name="email"
-                  placeholder="m@example.com"
+                  placeholder="name@example.com"
                   required
                 />
               </div>
@@ -49,7 +86,25 @@ export function SignUpForm({
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                 </div>
-                <Input id="password" type="password" name="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  name="password"
+                  required
+                  placeholder="password"
+                />
+              </div>
+              <div className="grid gap-2">
+                <div className="flex items-center">
+                  <Label htmlFor="confirm_password">Confirm Password</Label>
+                </div>
+                <Input
+                  id="confirm_password"
+                  type="password"
+                  name="confirm_password"
+                  required
+                  placeholder="password"
+                />
               </div>
               <Button type="submit" className="w-full">
                 Sign Up
